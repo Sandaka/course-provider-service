@@ -56,6 +56,15 @@ public class CourseProvider implements Serializable {
     @Column(name = "website")
     private String website;
 
+    @Column(name = "nationality")
+    private String nationality;
+
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name = "school_name")
+    private String schoolName;
+
     @Column(name = "description")
     private String description;
 
