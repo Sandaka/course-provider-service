@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by Sandaka Wijesinghe.
@@ -33,7 +34,8 @@ public class PaymentPlan implements Serializable {
     private BigDecimal cost;
 
     @Column(name = "due_date", nullable = false)
-    private String dueDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dueDate;
 
     @Column(name = "description")
     private String description;

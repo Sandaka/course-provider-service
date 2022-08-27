@@ -1,6 +1,8 @@
 package com.kingston.msc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +19,7 @@ import javax.persistence.*;
 @Data
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = CPTransactionTracker.class)
 public class CPTransactionTracker {
 
     @Id

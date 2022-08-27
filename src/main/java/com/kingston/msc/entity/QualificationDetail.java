@@ -25,10 +25,10 @@ public class QualificationDetail implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "subject", nullable = false)
+    @Column(name = "subject")
     private String subject;
 
-    @Column(name = "grade", nullable = false)
+    @Column(name = "grade")
     private String grade;
 
     @Column(name = "description")

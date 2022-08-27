@@ -33,6 +33,12 @@ public class CourseDetail implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "years")
+    private String years;
+
+    @Column(name = "medium")
+    private String medium;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
     private Course courseId;

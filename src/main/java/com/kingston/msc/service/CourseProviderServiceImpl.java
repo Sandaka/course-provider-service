@@ -2,6 +2,7 @@ package com.kingston.msc.service;
 
 import com.kingston.msc.entity.*;
 import com.kingston.msc.model.CourseProviderDetails;
+import com.kingston.msc.rabbitmq.RabbitMQSender;
 import com.kingston.msc.repository.CPTransactionTrackerRepository;
 import com.kingston.msc.repository.CourseProviderPaymentRepository;
 import com.kingston.msc.repository.CourseProviderRepository;
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Sandaka Wijesinghe.
@@ -28,18 +30,17 @@ public class CourseProviderServiceImpl implements CourseProviderService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
     private CourseProviderRepository courseProviderRepository;
 
+    @Autowired
     private CourseProviderPaymentRepository courseProviderPaymentRepository;
 
+    @Autowired
     private CPTransactionTrackerRepository transactionTrackerRepository;
 
     @Autowired
-    public CourseProviderServiceImpl(CourseProviderRepository courseProviderRepository, CourseProviderPaymentRepository courseProviderPaymentRepository, CPTransactionTrackerRepository transactionTrackerRepository) {
-        this.courseProviderRepository = courseProviderRepository;
-        this.courseProviderPaymentRepository = courseProviderPaymentRepository;
-        this.transactionTrackerRepository = transactionTrackerRepository;
-    }
+    private RabbitMQSender rabbitMQSender;
 
     @Override
     public CourseProvider saveCourseProvider(CourseProviderDetails courseProviderDetails) {
@@ -55,6 +56,7 @@ public class CourseProviderServiceImpl implements CourseProviderService {
         courseProvider.setNationality(courseProviderDetails.getNationality());
         courseProvider.setNic(courseProviderDetails.getNic());
         courseProvider.setPostalCode(courseProviderDetails.getPostalCode());
+
         courseProvider.setRegistrationNo(courseProviderDetails.getRegistrationNo());
         courseProvider.setSchoolName(courseProviderDetails.getSchoolName());
         courseProvider.setSmsAccountId(0L);
@@ -71,7 +73,6 @@ public class CourseProviderServiceImpl implements CourseProviderService {
 
 
         // make payment stripe
-
 
 
         // insert data to cp payment table
@@ -92,11 +93,17 @@ public class CourseProviderServiceImpl implements CourseProviderService {
         transactionTracker.setCourseProviderId(courseProvider.getId().toString());
         transactionTracker.setSmsAccountId("0");
         transactionTracker.setSubscription(Subscription.COURSE_PROVIDER.name());
-        transactionTracker.setTransactionId("aaaa"); // get from stripe
+
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+        log.info("Transaction tracker id {} for course provider {}", uuidAsString, courseProvider.getId());
+        transactionTracker.setTransactionId(uuidAsString); // get from stripe
 
         transactionTracker = transactionTrackerRepository.save(transactionTracker);
 
+        rabbitMQSender.sendToCourseProviderQueue(transactionTracker);
 
-        return null;
+
+        return courseProvider;
     }
 }

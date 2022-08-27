@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * Date: 7/24/22
  */
 @RestController
+//@CrossOrigin(origins = "*")
 @RequestMapping("/cps")
 @Slf4j
 public class CourseProviderController {
@@ -25,16 +26,18 @@ public class CourseProviderController {
     }
 
     @GetMapping("/course-provider")
-    public String testRoute(){
+    public String testRoute() {
+        System.out.println("test route working cp...");
         return "route is working";
     }
 
     @PostMapping("/course-provider")
-    public ResponseEntity<CourseProvider> registerCourseProvider(@RequestBody CourseProviderDetails courseProviderDetails){
+    public ResponseEntity<CourseProvider> registerCourseProvider(@RequestBody CourseProviderDetails courseProviderDetails) {
 
         System.out.println("cp registration route works!");
+        CourseProvider courseProvider = courseProviderService.saveCourseProvider(courseProviderDetails);
 
-        return null;
+        return ResponseEntity.ok().body(courseProvider);
     }
 
 
