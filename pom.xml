@@ -97,6 +97,20 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <version>1.9.3</version>
         </dependency>
+
+        <!-- Swagger UI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+
+<!--        Stripe-->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>10.0.2</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

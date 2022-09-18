@@ -25,15 +25,15 @@ public class InstructorDetail implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", referencedColumnName = "id", nullable = false)
     private Instructor instructorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", referencedColumnName = "id", nullable = false)
     private Subject subjectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "time_table_id", referencedColumnName = "id", nullable = false)
     private TimeTable timeTableId;
 

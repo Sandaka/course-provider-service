@@ -3,6 +3,7 @@ package com.kingston.msc.service;
 import com.kingston.msc.entity.Course;
 import com.kingston.msc.model.CourseDetailsDto;
 import com.kingston.msc.model.CourseYearFeeList;
+import com.kingston.msc.model.TempStudentCourseDetailDto;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface CourseService {
     List<Course> findCoursesByCourseProviderIdAndEduLevelId(long courseProviderId, long educationLevelId);
 
     CourseYearFeeList findCourseDetailsForStudentRegistration(long courseId);
+
+    TempStudentCourseDetailDto findCourseDetailsByTempStuId(long tempStuId);
 }

@@ -47,7 +47,7 @@ public class Qualification implements Serializable {
     @Column(name = "certificate")
     private String certificate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "qualification_type_id", referencedColumnName = "id", nullable = false)
     private QualificationType qualificationTypeId;
 

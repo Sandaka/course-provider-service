@@ -44,11 +44,11 @@ public class Course implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_provider_id", referencedColumnName = "id", nullable = false)
     private CourseProvider courseProviderId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "education_level_id", referencedColumnName = "id", nullable = false)
     private EducationLevel educationLevelId;
 
@@ -65,6 +65,7 @@ public class Course implements Serializable {
     private Set<TempStudent> tempStudentSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
     private Set<CourseMembership> courseMembershipSet;
 
     @Embedded

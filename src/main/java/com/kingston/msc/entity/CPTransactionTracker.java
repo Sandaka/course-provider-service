@@ -38,4 +38,11 @@ public class CPTransactionTracker {
 
     @Column(name = "subscription")
     private String subscription;
+
+    @Transient
+    private String username;
+    @Transient
+    private String password;
+    @Transient
+    private String email;
 }

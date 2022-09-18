@@ -38,7 +38,17 @@ public class EmailService {
         Context context = new Context();
         context.setVariables(mail.getProps());
 
-        final String template = mail.getProps().get("type").equals("NEWSLETTER") ? "newsletter-template" : "inlined-css-template";
+        //final String template = mail.getProps().get("type").equals("NEWSLETTER") ? "newsletter-template" : "inlined-css-template";
+        String template = "";
+
+        if(mail.getProps().get("type").equals("NEWSLETTER")){
+            template = "newsletter-template";
+        }else if(mail.getProps().get("type").equals("PAYMENTLINK")){
+            template = "payment-email";
+        }else {
+            template = "inlined-css-template";
+        }
+
         String html = templateEngine.process(template, context);
 
         helper.setTo(mail.getMailTo());

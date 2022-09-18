@@ -17,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
+//@Data
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CourseProviderPayment implements Serializable {
@@ -40,7 +40,7 @@ public class CourseProviderPayment implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_provider_id", referencedColumnName = "id", nullable = false)
     private CourseProvider courseProviderId;
 

@@ -31,7 +31,7 @@ public class CourseMaterial implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", referencedColumnName = "id", nullable = false)
     private Subject subjectId;
 

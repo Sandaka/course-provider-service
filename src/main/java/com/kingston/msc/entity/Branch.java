@@ -50,7 +50,7 @@ public class Branch implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_provider_id", referencedColumnName = "id", nullable = false)
     private CourseProvider courseProviderId;
 

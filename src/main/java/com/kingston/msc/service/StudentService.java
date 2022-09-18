@@ -1,8 +1,12 @@
 package com.kingston.msc.service;
 
+import com.kingston.msc.entity.Registration;
 import com.kingston.msc.entity.TempStudent;
+import com.kingston.msc.model.StudentPostDto;
 import com.kingston.msc.model.TempStudentDetails;
-import com.sun.tools.javac.util.List;
+import com.kingston.msc.model.VerifyStudentApplication;
+
+import java.util.List;
 
 /**
  * Created by Sandaka Wijesinghe.
@@ -10,8 +14,22 @@ import com.sun.tools.javac.util.List;
  */
 public interface StudentService {
 
-    public TempStudent saveTempStudent(TempStudentDetails tempStudentDetails);
+    TempStudent saveTempStudent(TempStudentDetails tempStudentDetails);
 
     //courseid, barnchid, coursetypeid,
-    List<TempStudentDetails> findNewStudentApplications(long courseId, long branchId, long courseTypeId);
+    List<VerifyStudentApplication> findNewStudentApplications(long courseId, int status, long branchId);
+
+    List<TempStudent> findNewStudentApplications2(long courseId, int status, long branchId);
+
+    List<VerifyStudentApplication> findPaymentCompletedApplications(long courseId, int status, long branchId);
+
+    Registration saveAndEnrollStudent(VerifyStudentApplication verifyStudentApplication);
+
+    long getRegistrationIdBySmsUserId(long smsUserId);
+
+//    String get
+
+    List<StudentPostDto> getStudentsByRegIds(List<Long> regIds);
+
+    int updateStatus(VerifyStudentApplication verifyStudentApplication);
 }

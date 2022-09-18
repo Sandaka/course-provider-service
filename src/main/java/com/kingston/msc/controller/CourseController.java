@@ -1,8 +1,11 @@
 package com.kingston.msc.controller;
 
 import com.kingston.msc.entity.Course;
+import com.kingston.msc.entity.CourseProvider;
 import com.kingston.msc.model.CourseDetailsDto;
 import com.kingston.msc.model.CourseYearFeeList;
+import com.kingston.msc.model.TempStudentCourseDetailDto;
+import com.kingston.msc.service.CourseProviderService;
 import com.kingston.msc.service.CourseService;
 import com.kingston.msc.utility.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,9 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private CourseProviderService courseProviderService;
 
     @GetMapping("/coursetest")
     public String courseTest() {
@@ -69,4 +75,27 @@ public class CourseController {
         CourseYearFeeList courseYearFeeList = courseService.findCourseDetailsForStudentRegistration(id);
         return ResponseEntity.ok().body(courseYearFeeList);
     }
+
+    @GetMapping("/get_courses_by_cpid/{cpid}")
+    public ResponseEntity<List<Course>> getAllCoursesByCPId(@PathVariable("cpid") long cpid) {
+
+        List<Course> courseList = courseService.findCoursesByCourseProviderId(cpid);
+        System.out.println(courseList.size() + "===============");
+        return ResponseEntity.ok().body(courseList);
+    }
+
+    @GetMapping("/get_course_by_smsaccount_id/{smsaccountId}")
+    public ResponseEntity<List<Course>> getAllCoursesBySmsAccountId(@PathVariable("smsaccountId") long smsaccountId) {
+
+        CourseProvider courseProvider = courseProviderService.findCourseProviderBySmsAccountId(smsaccountId);
+        List<Course> courseList = courseService.findCoursesByCourseProviderId(courseProvider.getId());
+        return ResponseEntity.ok().body(courseList);
+    }
+
+    @GetMapping("/course_detail/{id}")
+    public ResponseEntity<TempStudentCourseDetailDto> getCoursesByTempStudentId(@PathVariable("id") long tempStuId) {
+        TempStudentCourseDetailDto tempStudentCourseDetailDto = courseService.findCourseDetailsByTempStuId(tempStuId);
+        return ResponseEntity.ok().body(tempStudentCourseDetailDto);
+    }
+
 }

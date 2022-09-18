@@ -16,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
+//@Data
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CourseProvider implements Serializable {

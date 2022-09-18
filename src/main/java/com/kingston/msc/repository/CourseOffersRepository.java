@@ -1,5 +1,6 @@
 package com.kingston.msc.repository;
 
+import com.kingston.msc.entity.Course;
 import com.kingston.msc.entity.CourseOffers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CourseOffersRepository extends JpaRepository<CourseOffers, Long> {
+
+    CourseOffers findCourseOffersByCourseId(Course course);
 }

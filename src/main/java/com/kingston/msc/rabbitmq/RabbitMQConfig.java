@@ -16,18 +16,29 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${learngenix.rabbitmq.queue}")
-    String queueName;
+    @Value("${learngenix.rabbitmq.cp.registration.queue}")
+    String cpRegistrationQueue;
+
+    @Value("${learngenix.rabbitmq.stu.registration.queue}")
+    String stuRegistrationQueue;
 
     @Value("${learngenix.rabbitmq.exchange}")
     String exchange;
 
-    @Value("${learngenix.rabbitmq.routingkey}")
-    private String routingkey;
+    @Value("${learngenix.rabbitmq.cp.registration.routingkey}")
+    private String cpRoutingKey;
+
+    @Value("${learngenix.rabbitmq.stu.registration.routingkey}")
+    private String stuRoutingKey;
 
     @Bean
-    Queue queue() {
-        return new Queue(queueName, true);
+    Queue courseProviderQueue() {
+        return new Queue(cpRegistrationQueue, true);
+    }
+
+    @Bean
+    Queue studentQueue() {
+        return new Queue(stuRegistrationQueue, true);
     }
 
     @Bean
@@ -36,8 +47,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingkey);
+    Binding courseProviderBinding(Queue courseProviderQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(courseProviderQueue).to(exchange).with(cpRoutingKey);
+    }
+
+    @Bean
+    Binding studentBinding(Queue studentQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(studentQueue).to(exchange).with(stuRoutingKey);
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package com.kingston.msc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Data
-@ToString
+//@ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Registration implements Serializable {
 
@@ -31,31 +32,37 @@ public class Registration implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_membership_id", referencedColumnName = "id", nullable = false)
-    private CourseMembership courseMembershipId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", referencedColumnName = "id", nullable = false)
+//    @JsonIgnore
     private Branch branchId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_detail_id", referencedColumnName = "id", nullable = false)
+//    @JsonIgnore
     private CourseDetail courseDetailId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id", referencedColumnName = "id", nullable = false)
+//    @JsonIgnore
     private Badges badgesId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_offer_id", referencedColumnName = "id", nullable = false)
+//    @JsonIgnore
     private CourseOffers courseOffersId;
 
     @Column(name = "sms_user_id", nullable = false)
     private Long smsUserId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties
     private Set<StudentPayment> studentPaymentSet;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
+    private Set<CourseMembership> courseMembershipSet;
 
     @Embedded
     private Audit audit;

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Greetings from LearnGenix!</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- use the font -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 48px;
+            /*border: dot-dot-dash #049179;*/
+        }
+
+        .header{
+            height:100px;
+            width:500px;
+            background: #049179;
+            position: relative;
+            /*display: flex;*/
+            align-items: center;
+            justify-content: center;
+            /*background-image: url("eb.png");*/
+            /*justify-content: center;*/
+            /*padding: 20px 0;*/
+        }
+        .header-text{
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            color: white;
+            position: absolute;
+            margin: -35px 0 0 -35px;
+            font-size: 40px;
+            font-family: Arial;
+            font-weight: lighter;
+            /*margin-top: 20px;*/
+            padding-top: 20px;
+            /*text-transform: uppercase;*/
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-text"><span class="glyphicon glyphicon-certificate"></span>LearnGenix!</div>
+</div>
+
+<!--<p>-->
+
+<!--    <a href="https://google.com">-->
+<!--        <img th:src="@{eb.png}"-->
+<!--             alt="https://google.com" height="150" width="500"/>-->
+<!--    </a>-->
+<!--</p>-->
+
+<p th:text="${'Hello Dear ' + name + ','}"></p>
+
+<p th:if="${name.length() > 5}">
+    Wow! Welcome to Learngenix!
+</p>
+<p>
+    You're about to get subscription as a <b th:text="${role}"></b>. Please make your initial payment for the course to proceed.
+    Get an amazing experience with <b>LearnGenix</b> in education world.
+</p>
+
+<p>
+    <b>Payment link </b><a th:href="@{${url}}"> click here</a>
+</p>
+<p><b>Please note that, once you successfully logged into the system please change the password using MyAccount.</b></p>
+
+<p>
+    Regards, <br/>
+    <em th:text="${sign}"></em>
+<p th:text="${location}"></p>type
+</p>
+</body>
+</html>

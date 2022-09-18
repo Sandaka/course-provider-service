@@ -39,6 +39,7 @@ public class Subject implements Serializable {
     private Set<TimeTable> timeTableSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
     private Set<CourseMembership> courseMembershipSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)

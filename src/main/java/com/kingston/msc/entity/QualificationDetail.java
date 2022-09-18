@@ -1,5 +1,6 @@
 package com.kingston.msc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -34,11 +35,13 @@ public class QualificationDetail implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "temp_student_id", referencedColumnName = "id", nullable = false)
+//    @JsonIgnore
     private TempStudent tempStudentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "qualification_id", referencedColumnName = "id", nullable = false)
+//    @JsonIgnore
     private Qualification qualificationId;
 }

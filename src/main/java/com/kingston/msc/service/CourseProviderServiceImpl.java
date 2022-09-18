@@ -2,7 +2,7 @@ package com.kingston.msc.service;
 
 import com.kingston.msc.entity.*;
 import com.kingston.msc.model.CourseProviderDetails;
-import com.kingston.msc.rabbitmq.RabbitMQSender;
+import com.kingston.msc.rabbitmq.CourseProviderRabbitMQSender;
 import com.kingston.msc.repository.CPTransactionTrackerRepository;
 import com.kingston.msc.repository.CourseProviderPaymentRepository;
 import com.kingston.msc.repository.CourseProviderRepository;
@@ -40,7 +40,7 @@ public class CourseProviderServiceImpl implements CourseProviderService {
     private CPTransactionTrackerRepository transactionTrackerRepository;
 
     @Autowired
-    private RabbitMQSender rabbitMQSender;
+    private CourseProviderRabbitMQSender rabbitMQSender;
 
     @Override
     public CourseProvider saveCourseProvider(CourseProviderDetails courseProviderDetails) {
@@ -93,6 +93,7 @@ public class CourseProviderServiceImpl implements CourseProviderService {
         transactionTracker.setCourseProviderId(courseProvider.getId().toString());
         transactionTracker.setSmsAccountId("0");
         transactionTracker.setSubscription(Subscription.COURSE_PROVIDER.name());
+        transactionTracker.setEmail(courseProviderDetails.getPersonalEmail());
 
         UUID uuid = UUID.randomUUID();
         String uuidAsString = uuid.toString();
@@ -105,5 +106,11 @@ public class CourseProviderServiceImpl implements CourseProviderService {
 
 
         return courseProvider;
+    }
+
+    @Override
+    public CourseProvider findCourseProviderBySmsAccountId(Long smsAccountId) {
+
+        return courseProviderRepository.findCourseProviderBySmsAccountId(smsAccountId);
     }
 }

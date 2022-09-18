@@ -29,13 +29,18 @@ public class EmailController {
         Mail mail = new Mail();
         mail.setFrom("sandaka94@gmail.com");//replace with your desired email
         mail.setMailTo("travelduo94@gmail.com");//replace with your desired email
-        mail.setSubject("Email with Spring boot and thymeleaf template!");
+        mail.setSubject("Greetings from LearnGenix!");
 
         Map<String, Object> model = new HashMap<String, Object>();
-        model.put("name", "Developer!");
-        model.put("location", "United States");
-        model.put("sign", "Java Developer");
+        model.put("name", "Esoft Metro campus!");
+        model.put("location", "Sri Lanka");
+        model.put("sign", "LearnGenix");
+        model.put("role", "Course Provider");
         model.put("type", "NEWSLETTER");
+        model.put("url", "NEWSLETTER");
+        model.put("reg_url", "");
+        model.put("username", "NEWSLETTER");
+        model.put("password", "NEWSLETTER");
         mail.setProps(model);
 
         try {

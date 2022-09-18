@@ -39,11 +39,11 @@ public class CourseDetail implements Serializable {
     @Column(name = "medium")
     private String medium;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
     private Course courseId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_type_id", referencedColumnName = "id", nullable = false)
     private CourseType courseTypeId;
 

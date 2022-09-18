@@ -39,6 +39,7 @@ public class Batch implements Serializable {
     private Date endDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
     private Set<CourseMembership> courseMembershipSet;
 
     @Embedded

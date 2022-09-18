@@ -35,4 +35,6 @@ public class CourseDetailsDto {
     private String offer;
     private String offerDescription;
     private Date validUntil;
+
+    private long smsAccountId;
 }

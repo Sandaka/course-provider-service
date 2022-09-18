@@ -1,7 +1,9 @@
 package com.kingston.msc.controller;
 
+import com.kingston.msc.entity.CPTransactionTracker;
 import com.kingston.msc.entity.CourseProvider;
 import com.kingston.msc.model.CourseProviderDetails;
+import com.kingston.msc.rabbitmq.CourseProviderRabbitMQSender;
 import com.kingston.msc.service.CourseProviderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +20,24 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CourseProviderController {
 
+    @Autowired
     private CourseProviderService courseProviderService;
 
     @Autowired
-    public CourseProviderController(CourseProviderService courseProviderService) {
-        this.courseProviderService = courseProviderService;
-    }
+    private CourseProviderRabbitMQSender rabbitMQSender;
 
     @GetMapping("/course-provider")
     public String testRoute() {
         System.out.println("test route working cp...");
+        return "route is working";
+    }
+
+    @GetMapping("/test-rabbit")
+    public String testRabbit() {
+        CPTransactionTracker cpTransactionTracker = new CPTransactionTracker();
+        cpTransactionTracker.setCourseProviderId("cp_id");
+
+        rabbitMQSender.sendToCourseProviderQueue(cpTransactionTracker);
         return "route is working";
     }
 

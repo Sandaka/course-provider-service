@@ -37,7 +37,7 @@ public class CourseOffers implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date validUntil;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
     private Course courseId;
 

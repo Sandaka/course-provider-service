@@ -36,15 +36,15 @@ public class TimeTable implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
     private Course courseId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", referencedColumnName = "id", nullable = false)
     private Subject subjectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_detail_id", referencedColumnName = "id", nullable = false)
     private CourseDetail courseDetailId;
 

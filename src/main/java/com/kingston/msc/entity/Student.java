@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Data
-@ToString
+//@ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Student implements Serializable {
 
@@ -74,6 +74,7 @@ public class Student implements Serializable {
     private Long tempStudentId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
     private Set<CourseMembership> courseMembershipSet;
 
     @Embedded

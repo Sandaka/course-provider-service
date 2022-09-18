@@ -1,10 +1,7 @@
 package com.kingston.msc.service;
 
 import com.kingston.msc.entity.*;
-import com.kingston.msc.model.CourseDetailsDto;
-import com.kingston.msc.model.CourseFeeDto;
-import com.kingston.msc.model.CourseYearFeeDto;
-import com.kingston.msc.model.CourseYearFeeList;
+import com.kingston.msc.model.*;
 import com.kingston.msc.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +44,9 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseDetailRepository courseDetailRepository;
 
+    @Autowired
+    private CourseProviderRepository courseProviderRepository;
+
 
     @Override
     public Course saveCourse(CourseDetailsDto courseDetailsDto) {
@@ -55,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = new Course();
         course.setDescription(courseDetailsDto.getDescription());
         CourseProvider courseProvider = new CourseProvider();
-        courseProvider.setId(2L); // set dynamically
+        courseProvider.setId(courseProviderRepository.findCourseProviderBySmsAccountId(courseDetailsDto.getSmsAccountId()).getId()); // set dynamically
         course.setCourseProviderId(courseProvider);
         EducationLevel educationLevel = new EducationLevel();
         educationLevel.setId(courseDetailsDto.getEduLevelId());
@@ -72,7 +72,7 @@ public class CourseServiceImpl implements CourseService {
 
         final Course course_new = courseRepository.save(course);
 
-        // save course detail
+        // save course detail --> this should be a list if selected both types fulltime and parttime
         CourseDetail courseDetail = new CourseDetail();
         courseDetail.setAudit(audit);
         courseDetail.setCourseFee(courseDetailsDto.getCourseFee());
@@ -122,16 +122,22 @@ public class CourseServiceImpl implements CourseService {
 
 
         // save course offers
+        CourseOffers courseOffers = new CourseOffers();
         if (null != courseDetailsDto.getOffer() && !courseDetailsDto.getOffer().isEmpty()) {
-            CourseOffers courseOffers = new CourseOffers();
             courseOffers.setAudit(audit);
             courseOffers.setCourseId(course_new);
             courseOffers.setDescription(courseDetailsDto.getOfferDescription());
             courseOffers.setValidUntil(courseDetailsDto.getValidUntil());
             courseOffers.setOffer(courseDetailsDto.getOffer());
 
-            courseOffersRepository.save(courseOffers);
+        } else {
+            courseOffers.setAudit(audit);
+            courseOffers.setCourseId(course_new);
+            courseOffers.setDescription("No offer for this course");
+            courseOffers.setValidUntil(new Date());
+            courseOffers.setOffer("No offer for this course");
         }
+        courseOffersRepository.save(courseOffers);
 
         return course_new;
     }
@@ -142,7 +148,23 @@ public class CourseServiceImpl implements CourseService {
         courseProvider.setId(courseProviderId);
 
         List<Course> courseList = courseRepository.findCoursesByCourseProviderId(courseProvider);
-        return courseList;
+        List<Course> courseList2 = new ArrayList<>();
+
+        if (!courseList.isEmpty()) {
+            courseList.forEach(course -> {
+                Course course1 = new Course();
+                course1.setId(course.getId());
+                course1.setTitle(course.getTitle());
+                course1.setSeats(course.getSeats());
+                course1.setStartDate(course.getStartDate());
+                course1.setEndDate(course.getEndDate());
+                course1.setDescription(course.getDescription());
+
+                courseList2.add(course1);
+            });
+        }
+
+        return courseList2;
     }
 
     @Override
@@ -172,7 +194,7 @@ public class CourseServiceImpl implements CourseService {
                 "INNER JOIN course_type ct on ct.id=cd.course_type_id " +
                 "INNER JOIN payment_plan pp on pp.course_detail_id=cd.id " +
                 "INNER JOIN time_table tt on tt.course_detail_id=cd.id " +
-                "LEFT JOIN course_offers co on co.course_id=c.id " +
+                "INNER JOIN course_offers co on co.course_id=c.id " +
                 "INNER JOIN education_level el on el.id=c.education_level_id " +
                 "WHERE c.id=(?) " +
                 "ORDER BY pp.due_date, ct.course_type_name");
@@ -186,8 +208,9 @@ public class CourseServiceImpl implements CourseService {
 
         if (!list.isEmpty()) {
             courseDetailsListAsObj = new CourseYearFeeList();
+            CourseYearFeeDto courseYearFeeDto = new CourseYearFeeDto(); // to get only one record -> change it
             for (Object[] obj : list) {
-                CourseYearFeeDto courseYearFeeDto = new CourseYearFeeDto();
+
                 courseYearFeeDto.setCourseId(((BigInteger) obj[1]).longValue());
                 courseYearFeeDto.setTitle(obj[2].toString());
                 courseYearFeeDto.setStartDate((Date) obj[3]);
@@ -202,7 +225,6 @@ public class CourseServiceImpl implements CourseService {
                 courseYearFeeDto.setOffer((obj[12] == null) ? "" : obj[12].toString());
                 courseYearFeeDto.setSchedule(obj[15].toString());
 
-                courseYearFeeDtoList.add(courseYearFeeDto);
 
                 CourseFeeDto courseFeeDto = new CourseFeeDto();
                 courseFeeDto.setDueDate(obj[0].toString());
@@ -211,10 +233,57 @@ public class CourseServiceImpl implements CourseService {
 
                 courseFeeDtoList.add(courseFeeDto);
             }
-
+            courseYearFeeDtoList.add(courseYearFeeDto); // eliyata gaththa
             courseDetailsListAsObj.setCourseDetailsList(courseYearFeeDtoList);
             courseDetailsListAsObj.setCourseFeeList(courseFeeDtoList);
         }
         return courseDetailsListAsObj;
+    }
+
+    @Override
+    public TempStudentCourseDetailDto findCourseDetailsByTempStuId(long tempStuId) {
+
+        Query query = entityManager.createNativeQuery("SELECT " +
+                "c.id as course_id, c.title, c.description, c.start_date, c.end_date, " +
+                "ts.id as temp_student_id, ts.full_name, " +
+                "ct.course_type_name, cd.course_fee, cd.years, cd.medium, " +
+                "pp.year, pp.cost, pp.due_date, " +
+                "cp.school_name, tsp.status   " +
+                "FROM course c " +
+                "INNER JOIN temp_student ts ON ts.course_id=c.id " +
+                "INNER JOIN course_detail cd ON cd.course_id=c.id " +
+                "INNER JOIN course_type ct ON ct.id=cd.course_type_id " +
+                "INNER JOIN payment_plan pp ON pp.course_detail_id=cd.id " +
+                "INNER JOIN course_provider cp ON cp.id=c.course_provider_id " +
+                "LEFT JOIN temp_student_payment tsp ON tsp.temp_student_id=ts.id " +
+                "WHERE ts.id=(?) ORDER BY pp.year ASC limit 1");
+
+        query.setParameter(1, tempStuId);
+        List<Object[]> list = query.getResultList();
+
+        TempStudentCourseDetailDto tempStudentCourseDetailDto = null;
+
+        if (!list.isEmpty()) {
+            tempStudentCourseDetailDto = new TempStudentCourseDetailDto();
+            for (Object[] obj : list) {
+                tempStudentCourseDetailDto.setCourseId(Long.parseLong(obj[0].toString()));
+                tempStudentCourseDetailDto.setTitle(obj[1].toString());
+                tempStudentCourseDetailDto.setDescription(obj[2].toString());
+                tempStudentCourseDetailDto.setStartDate((Date) obj[3]);
+                tempStudentCourseDetailDto.setEndDate((Date) obj[4]);
+                tempStudentCourseDetailDto.setTempStuId(Long.parseLong(obj[5].toString()));
+                tempStudentCourseDetailDto.setFullName(obj[6].toString());
+                tempStudentCourseDetailDto.setCourseTypeName(obj[7].toString());
+                tempStudentCourseDetailDto.setCourseFee(obj[8].toString());
+                tempStudentCourseDetailDto.setYears(obj[9].toString());
+                tempStudentCourseDetailDto.setMedium(obj[10].toString());
+                tempStudentCourseDetailDto.setYear(obj[11].toString());
+                tempStudentCourseDetailDto.setCost(obj[12].toString());
+//                tempStudentCourseDetailDto.setDueDate((Date) obj[13]);
+                tempStudentCourseDetailDto.setSchoolName(obj[14].toString());
+                tempStudentCourseDetailDto.setPaymentStatus(obj[15] != null ? 1 : 0);
+            }
+        }
+        return tempStudentCourseDetailDto;
     }
 }

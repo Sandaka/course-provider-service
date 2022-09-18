@@ -1,5 +1,6 @@
 package com.kingston.msc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -26,24 +27,30 @@ public class CourseMembership implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Course courseId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "batch_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Batch batchId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Subject subjectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Student studentId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
-    private Set<Registration> registrationSet;
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "registration_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
+    private Registration registrationId;
 
     @Embedded
     private Audit audit;

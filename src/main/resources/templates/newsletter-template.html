@@ -2,46 +2,100 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Spring boot eamil teplate with Thymeleaf</title>
+    <title>Greetings from LearnGenix!</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- use the font -->
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 48px;
+            /*border: dot-dot-dash #049179;*/
+        }
+
+        .header{
+            height:100px;
+            width:500px;
+            background: #049179;
+            position: relative;
+            /*display: flex;*/
+            align-items: center;
+            justify-content: center;
+            /*background-image: url("eb.png");*/
+            /*justify-content: center;*/
+            /*padding: 20px 0;*/
+        }
+        .header-text{
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            color: white;
+            position: absolute;
+            margin: -35px 0 0 -35px;
+            font-size: 40px;
+            font-family: Arial;
+            font-weight: lighter;
+            /*margin-top: 20px;*/
+            padding-top: 20px;
+            /*text-transform: uppercase;*/
         }
     </style>
 </head>
 <body>
-<p th:text="${'Hello Dear ' + name}"></p>
+
+<div class="header">
+<div class="header-text"><span class="glyphicon glyphicon-certificate"></span>LearnGenix!</div>
+</div>
+
+<!--<p>-->
+
+<!--    <a href="https://google.com">-->
+<!--        <img th:src="@{eb.png}"-->
+<!--             alt="https://google.com" height="150" width="500"/>-->
+<!--    </a>-->
+<!--</p>-->
+
+<p th:text="${'Hello Dear ' + name + ','}"></p>
 
 <p th:if="${name.length() > 5}">
-    Wow! You've got a long name (more than 5 chars)!
+    Wow! Welcome to Learngenix!
 </p>
 <p>
-    You have been successfully subscribed to the <b>Fake newsletter</b> on
+    You have been successfully subscribed as a <b th:text="${role}"></b> on
     <span th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></span>
+    <br>
+    Get an amazing experience with <b>LearnGenix</b> in education world.
 </p>
 
-<p>
-    You can find <b>your inlined image</b> just below this text.
-</p>
-<p>
 
-    <a href="https://javabydeveloper.com">
-        <img src="https://javabydeveloper.com/wp-content/uploads/2019/12/javabydeveloper-email.png"
-             alt="htts://javabydeveloper.com" height="110" width="500"/>
-    </a>
+<p>
+    Below are the details to your subscription.
 </p>
+<p th:if="${reg_url.length() > 0}">
+    <b>Student Reg Url: </b><a th:href="@{${reg_url}}"> <p th:text="${reg_url}"></p></a>
+</p>
+<p>
+    <b>Login Url </b><a href="http://localhost:4200/learngenix/signIn"> click here</a>
+</p>
+<p>
+    <b>Username: </b><span th:text="${username}"></span>
+</p>
+<p>
+    <b>Password: </b><span th:text="${password}"></span>
+</p>
+<p><b>Please note that, once you successfully logged into the system please change the password using MyAccount.</b></p>
+
 <p>
     Regards, <br/>
     <em th:text="${sign}"></em>
-<p th:text="${location}"></p>
+<p th:text="${location}"></p>type
 </p>
 </body>
 </html>

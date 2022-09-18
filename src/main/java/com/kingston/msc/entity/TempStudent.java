@@ -1,5 +1,7 @@
 package com.kingston.msc.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -70,20 +72,31 @@ public class TempStudent implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_type_id", referencedColumnName = "id", nullable = false)
+//    @JsonBackReference
+//    @JsonIgnore
     private CourseType courseTypeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", referencedColumnName = "id", nullable = false)
+//    @JsonBackReference
+//    @JsonIgnore
     private Branch branchId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
+//    @JsonBackReference
+//    @JsonIgnore
     private Course courseId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties
     private Set<QualificationDetail> qualificationDetailSet;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties
+    private Set<TempStudentPayment> tempStudentPaymentSet;
 
     @Embedded
     private Audit audit;

@@ -9,5 +9,7 @@ import com.kingston.msc.model.CourseProviderDetails;
  */
 public interface CourseProviderService {
 
-    public CourseProvider saveCourseProvider(CourseProviderDetails courseProviderDetails);
+    CourseProvider saveCourseProvider(CourseProviderDetails courseProviderDetails);
+
+    CourseProvider findCourseProviderBySmsAccountId(Long smsAccountId);
 }

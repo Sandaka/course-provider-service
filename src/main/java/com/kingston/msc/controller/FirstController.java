@@ -1,7 +1,7 @@
 package com.kingston.msc.controller;
 
 import com.kingston.msc.entity.CPTransactionTracker;
-import com.kingston.msc.rabbitmq.RabbitMQSender;
+import com.kingston.msc.rabbitmq.CourseProviderRabbitMQSender;
 import com.kingston.msc.utility.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 public class FirstController {
 
     @Autowired
-    private RabbitMQSender rabbitMQSender;
+    private CourseProviderRabbitMQSender rabbitMQSender;
 
     @GetMapping("/message")
     public String test() {
@@ -42,6 +42,7 @@ public class FirstController {
         CPTransactionTracker cpTransactionTracker = new CPTransactionTracker();
         cpTransactionTracker.setTransactionId("1");
         cpTransactionTracker.setSubscription("test queue");
+
         cpTransactionTracker.setCourseProviderId("1");
 
         rabbitMQSender.sendToCourseProviderQueue(cpTransactionTracker);

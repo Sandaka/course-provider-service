@@ -37,11 +37,11 @@ public class InstructorQualification implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", referencedColumnName = "id", nullable = false)
     private Instructor instructorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "qualification_type_id", referencedColumnName = "id", nullable = false)
     private QualificationType qualificationTypeId;
 
